@@ -13,7 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -61,9 +60,9 @@ class _MyAppState extends State<MyApp> {
   Widget _buildFlexibleDropdown() {
     return FlexibleDropdown(
       overlayChild: Container(
-        height: 300,
+        height: 160,
         width: double.infinity,
-        color: Colors.white,
+        color: Colors.deepPurple,
       ),
       barrierColor: Colors.black38.withOpacity(.2),
       barrierShape: BarrierShape.headerTrans,
@@ -73,5 +72,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-

@@ -11,13 +11,16 @@ class OverlayRouteLayout extends SingleChildLayoutDelegate {
     this.textDirection,
   );
 
-  // Rectangle of underlying button, relative to the overlay's dimensions.
+  /// Rectangle of underlying button, relative to the overlay's dimensions.
   final RelativeRect position;
-  // The padding of unsafe area.
+
+  /// The padding of unsafe area.
   final EdgeInsets padding;
-  // List of rectangles that we should avoid overlapping. Unusable screen area.
+
+  /// List of rectangles that we should avoid overlapping. Unusable screen area.
   final Set<Rect> avoidBounds;
-  // Whether to prefer going to the left or to the right.
+
+  /// Whether to prefer going to the left or to the right.
   final TextDirection textDirection;
 
   @override
@@ -57,7 +60,9 @@ class OverlayRouteLayout extends SingleChildLayoutDelegate {
     }
     final Offset wantedPosition = Offset(x, y);
     final Offset originCenter = position.toRect(Offset.zero & size).center;
-    final Iterable<Rect> subScreens = DisplayFeatureSubScreen.subScreensInBounds(Offset.zero & size, avoidBounds);
+    final Iterable<Rect> subScreens =
+        DisplayFeatureSubScreen.subScreensInBounds(
+            Offset.zero & size, avoidBounds);
     final Rect subScreen = _closestScreen(subScreens, originCenter);
     return _fitInsideScreen(subScreen, childSize, wantedPosition);
   }
@@ -65,30 +70,36 @@ class OverlayRouteLayout extends SingleChildLayoutDelegate {
   Rect _closestScreen(Iterable<Rect> screens, Offset point) {
     Rect closest = screens.first;
     for (final Rect screen in screens) {
-      if ((screen.center - point).distance < (closest.center - point).distance) {
+      if ((screen.center - point).distance <
+          (closest.center - point).distance) {
         closest = screen;
       }
     }
     return closest;
   }
 
-  Offset _fitInsideScreen(Rect screen, Size childSize, Offset wantedPosition){
+  Offset _fitInsideScreen(Rect screen, Size childSize, Offset wantedPosition) {
     double x = wantedPosition.dx;
     double y = wantedPosition.dy;
     // Avoid going outside an area defined as the rectangle 8.0 pixels from the
     // edge of the screen in every direction.
     if (x < screen.left + _kMenuScreenPadding + padding.left) {
       x = screen.left + _kMenuScreenPadding + padding.left;
-    } else if (x + childSize.width > screen.right - _kMenuScreenPadding - padding.right) {
+    } else if (x + childSize.width >
+        screen.right - _kMenuScreenPadding - padding.right) {
       x = screen.right - childSize.width - _kMenuScreenPadding - padding.right;
     }
     if (y < screen.top + _kMenuScreenPadding + padding.top) {
       y = _kMenuScreenPadding + padding.top;
-    } else if (y + childSize.height > screen.bottom - _kMenuScreenPadding - padding.bottom) {
-      y = screen.bottom - childSize.height - _kMenuScreenPadding - padding.bottom;
+    } else if (y + childSize.height >
+        screen.bottom - _kMenuScreenPadding - padding.bottom) {
+      y = screen.bottom -
+          childSize.height -
+          _kMenuScreenPadding -
+          padding.bottom;
     }
 
-    return Offset(x,y);
+    return Offset(x, y);
   }
 
   @override
