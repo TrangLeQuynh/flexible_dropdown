@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/enum_type.dart';
 import '../widgets/modal_barrier_layout.dart';
 import '../widgets/overlay_route_layout.dart';
 
@@ -6,8 +7,9 @@ class FlexibleDropdown extends StatefulWidget {
   final Widget child;
   final Widget overlayChild;
 
-  final double? elevation;
   final TextDirection textDirection;
+  final Color? barrierColor;
+  final BarrierShape? barrierShape;
   /// The offset is applied relative to the initial position
   /// set by the [position].
   ///
@@ -15,7 +17,7 @@ class FlexibleDropdown extends StatefulWidget {
   final Offset offset;
   /// Called when the popup menu is shown.
   final VoidCallback? onOpened;
-  /// Called when the popup menu is shown.
+  /// Called when the popup menu is closed.
   final VoidCallback? onClosed;
 
   const FlexibleDropdown({
@@ -24,7 +26,8 @@ class FlexibleDropdown extends StatefulWidget {
     required this.overlayChild,
     this.textDirection = TextDirection.rtl,
     this.offset = Offset.zero,
-    this.elevation,
+    this.barrierColor,
+    this.barrierShape,
     this.onOpened,
     this.onClosed,
   }) : super(key: key);
@@ -71,8 +74,9 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
         capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
         child: widget.overlayChild,
         position: position,
-        elevation: widget.elevation, // popupMenuTheme.elevation
         textDirection: widget.textDirection,
+        barrierShape: widget.barrierShape,
+        barrierBgColor: widget.barrierColor,
       ),
     ).then((value) {
       if (!mounted) return;
@@ -86,14 +90,16 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   final Widget child;
   final RelativeRect position;
   final TextDirection textDirection;
-  final double? elevation;
+  final Color? barrierBgColor;
+  final BarrierShape? barrierShape;
 
   FlexibleDropdownRoute({
     required this.capturedThemes,
     required this.child,
     required this.position,
+    this.barrierBgColor,
+    this.barrierShape,
     this.textDirection = TextDirection.rtl,
-    this.elevation,
   });
 
   @override
@@ -111,7 +117,11 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => 'Flexible Dropdown';
 
   @override
-  Widget buildModalBarrier() => ModalBarrierLayout(position: position);
+  Widget buildModalBarrier() => ModalBarrierLayout(
+    position: position,
+    barrierColor: barrierBgColor,
+    barrierShape: barrierShape,
+  );
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {

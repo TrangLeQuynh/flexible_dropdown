@@ -1,0 +1,4 @@
+enum BarrierShape {
+  normal,
+  headerTrans,
+}
