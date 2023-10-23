@@ -1,5 +1,6 @@
 name: flexible_dropdown
-description: A new Flutter plugin project.
+summary: Customize flexible dropdown
+description: Allows the dropdown to be dismissed by tapping | panning the scrim and Set transparent for header(Barrier)
 version: 1.0.0
 homepage: https://github.com/TrangLeQuynh/flexible_dropdown
 
