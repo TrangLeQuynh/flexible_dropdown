@@ -1,6 +1,10 @@
 # Flexible Dropdown Package
 
-Support multi platform
+<div align="left">
+[![pub package version](https://img.shields.io/pub/v/flexible_dropdown)](https://pub.dev/packages/flexible_dropdown)
+<a href="https://flutter.dev/" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/platform-flutter-ff69b4.svg"></a>
+</div>
+
 
 ## Features
 
@@ -18,7 +22,7 @@ First, add `flexible_dropdown` as a [dependency in your pubspec.yaml file](https
 
 ```yaml
 dependencies
-  flexible_dropdown: ^1.1.2
+  flexible_dropdown: ^1.0.1
 ```
 
 ## Usage
@@ -50,4 +54,4 @@ FlexibleDropdown(
 )
 ```
 
-<video src="assets/example1.mp4" controls title="Title"></video>
+![example](assets/example.gif)
