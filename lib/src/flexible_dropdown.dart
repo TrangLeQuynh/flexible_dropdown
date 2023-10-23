@@ -4,19 +4,41 @@ import '../widgets/modal_barrier_layout.dart';
 import '../widgets/overlay_route_layout.dart';
 
 class FlexibleDropdown extends StatefulWidget {
+  /// [Required]
+  ///
+  /// [child] is the widget used for this button and the button will utilize an [InkWell] for taps.
   final Widget child;
+
+  /// [Required]
+  ///
+  /// [overlayChild] is the widget which displayed after the user taps on [child]
   final Widget overlayChild;
 
+  /// Whether to prefer going to the left or to the right.
+  ///
+  /// If this property is null, default is [TextDirection.rtl]
   final TextDirection textDirection;
+
+  /// The color to use for the modal barrier.
+  ///
+  /// If this property is null, the barrier will be Colors.black38 with opacity 0.2.
   final Color? barrierColor;
+
+  /// If provided, the shape used for the modal barrier.
+  ///
+  /// If this property is null, then [BarrierShape.normal] is used.
   final BarrierShape? barrierShape;
+
   /// The offset is applied relative to the initial position
   /// set by the [position].
   ///
   /// When not set, the offset defaults to [Offset.zero].
+  ///
   final Offset offset;
+
   /// Called when the popup menu is shown.
   final VoidCallback? onOpened;
+
   /// Called when the popup menu is closed.
   final VoidCallback? onClosed;
 
@@ -37,7 +59,6 @@ class FlexibleDropdown extends StatefulWidget {
 }
 
 class _FlexibleDropdownState extends State<FlexibleDropdown> {
-
   @override
   void setState(VoidCallback fn) {
     if (mounted) super.setState(fn);
@@ -52,33 +73,39 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
     );
   }
 
+  /// show the overlay dialog of the button
   void _showOverlayDialog() {
     // final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     final RenderBox button = context.findRenderObject()! as RenderBox;
-    final RenderBox overlay = Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
     // final PopupMenuPosition popupMenuPosition = popupMenuTheme.position ?? PopupMenuPosition.over;
     final Offset offset = Offset(0.0, button.size.height) + widget.offset;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(offset, ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset.zero) + offset, ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(Offset.zero) + offset,
+            ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
     widget.onOpened?.call();
+
     /// Show flexible dropdown
-    final NavigatorState navigator = Navigator.of(context, rootNavigator: false);
-    navigator.push(
+    final NavigatorState navigator =
+        Navigator.of(context, rootNavigator: false);
+    navigator
+        .push(
       FlexibleDropdownRoute(
-        capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
         child: widget.overlayChild,
         position: position,
         textDirection: widget.textDirection,
         barrierShape: widget.barrierShape,
         barrierBgColor: widget.barrierColor,
       ),
-    ).then((value) {
+    )
+        .then((value) {
       if (!mounted) return;
       widget.onClosed?.call();
     });
@@ -86,7 +113,6 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
 }
 
 class FlexibleDropdownRoute<T> extends PopupRoute<T> {
-  final CapturedThemes capturedThemes;
   final Widget child;
   final RelativeRect position;
   final TextDirection textDirection;
@@ -94,7 +120,6 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   final BarrierShape? barrierShape;
 
   FlexibleDropdownRoute({
-    required this.capturedThemes,
     required this.child,
     required this.position,
     this.barrierBgColor,
@@ -108,8 +133,8 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   @override
   Color? get barrierColor => null;
 
-  // This allows the popup to be dismissed by tapping the scrim or by pressing
-  // the escape key on the keyboard.
+  /// This allows the popup to be dismissed by tapping the scrim or by pressing
+  /// the escape key on the keyboard.
   @override
   bool get barrierDismissible => true;
 
@@ -118,13 +143,14 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildModalBarrier() => ModalBarrierLayout(
-    position: position,
-    barrierColor: barrierBgColor,
-    barrierShape: barrierShape,
-  );
+        position: position,
+        barrierColor: barrierBgColor,
+        barrierShape: barrierShape,
+      );
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
     return MediaQuery.removePadding(
       context: context,
       removeTop: false,

@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/enum_type.dart';
 
+/// [ModalBarrierLayout] use to customize [ModalBarrier]
+///
 class ModalBarrierLayout extends StatelessWidget {
+  /// Available when [barrierShape] is [BarrierShape.headerTrans]
+  ///
+  /// Support not set [barrierColor] at header
   final RelativeRect position;
+
+  /// The color to use for the modal barrier.
   final Color? barrierColor;
+
+  /// [BarrierShape.normal] or [BarrierShape.headerTrans]
   final BarrierShape? barrierShape;
 
   const ModalBarrierLayout({
@@ -29,7 +38,7 @@ class ModalBarrierLayout extends StatelessWidget {
 
   Widget _buildLayoutShape() {
     final Color bgColor = barrierColor ?? Colors.black38.withOpacity(.2);
-    switch(barrierShape) {
+    switch (barrierShape) {
       case BarrierShape.headerTrans:
         return CustomPaint(
           painter: HeaderTransPainter(position.top, bgColor),
@@ -44,6 +53,7 @@ class ModalBarrierLayout extends StatelessWidget {
   }
 }
 
+/// Modal Barrier - Painter
 class HeaderTransPainter extends CustomPainter {
   double topPosition;
   Color color;
@@ -56,11 +66,12 @@ class HeaderTransPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..color = color;
 
-    canvas.drawRect(Rect.fromLTWH(0.0, topPosition, size.width, size.height), bgPaint);
+    canvas.drawRect(
+        Rect.fromLTWH(0.0, topPosition, size.width, size.height), bgPaint);
   }
 
   @override
   bool shouldRepaint(HeaderTransPainter oldDelegate) {
-    return oldDelegate.topPosition != topPosition;
+    return topPosition != oldDelegate.topPosition;
   }
 }

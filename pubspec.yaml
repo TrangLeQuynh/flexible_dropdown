@@ -1,7 +1,7 @@
 name: flexible_dropdown
 description: A new Flutter plugin project.
-version: 0.0.1
-homepage: https://github.com/TrangLeQuynh
+version: 1.0.0
+homepage: https://github.com/TrangLeQuynh/flexible_dropdown
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
