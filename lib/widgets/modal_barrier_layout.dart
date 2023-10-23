@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import '../models/enum_type.dart';
 
 class ModalBarrierLayout extends StatelessWidget {
   final RelativeRect position;
+  final Color? barrierColor;
+  final BarrierShape? barrierShape;
+
   const ModalBarrierLayout({
     Key? key,
     required this.position,
+    this.barrierColor,
+    this.barrierShape,
   }) : super(key: key);
 
   @override
@@ -17,10 +23,44 @@ class ModalBarrierLayout extends StatelessWidget {
       onPanStart: (detail) {
         Navigator.of(context).pop();
       },
-      child: ColoredBox(
-        color: Colors.black38.withOpacity(.15),
-        child: const SizedBox.expand(),
-      ),
+      child: _buildLayoutShape(),
     );
+  }
+
+  Widget _buildLayoutShape() {
+    final Color bgColor = barrierColor ?? Colors.black38.withOpacity(.2);
+    switch(barrierShape) {
+      case BarrierShape.headerTrans:
+        return CustomPaint(
+          painter: HeaderTransPainter(position.top, bgColor),
+          child: const SizedBox.expand(),
+        );
+      default: //normal
+        return ColoredBox(
+          color: bgColor,
+          child: const SizedBox.expand(),
+        );
+    }
+  }
+}
+
+class HeaderTransPainter extends CustomPainter {
+  double topPosition;
+  Color color;
+
+  HeaderTransPainter(this.topPosition, this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint bgPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = color;
+
+    canvas.drawRect(Rect.fromLTWH(0.0, topPosition, size.width, size.height), bgPaint);
+  }
+
+  @override
+  bool shouldRepaint(HeaderTransPainter oldDelegate) {
+    return oldDelegate.topPosition != topPosition;
   }
 }

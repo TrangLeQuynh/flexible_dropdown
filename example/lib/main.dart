@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
@@ -61,14 +62,13 @@ class _MyAppState extends State<MyApp> {
     return FlexibleDropdown(
       overlayChild: Container(
         height: 300,
-        // width: double.infinity,
-        width: 160,
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
+        width: double.infinity,
+        color: Colors.white,
       ),
+      barrierColor: Colors.black38.withOpacity(.2),
+      barrierShape: BarrierShape.headerTrans,
       textDirection: TextDirection.ltr,
-      offset: Offset(0, 0),
+      offset: Offset.zero,
       child: _buildTextBtn('Flexible Dropdown'),
     );
   }
