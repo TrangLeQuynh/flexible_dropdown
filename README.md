@@ -1,7 +1,7 @@
 # Flexible Dropdown Package
 
 <div align="left">
-[![pub package version](https://img.shields.io/pub/v/flexible_dropdown)](https://pub.dev/packages/flexible_dropdown)
+<a href="https://pub.dev/packages/flexible_dropdown" rel="noopener" target="_blank"><img src="https://img.shields.io/pub/v/flexible_dropdown"></a>
 <a href="https://flutter.dev/" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/platform-flutter-ff69b4.svg"></a>
 </div>
 
@@ -16,13 +16,15 @@
 
 * Allows the dropdown to be dismissed by tapping | panning the scrim or by pressing the escape key on the keyboard.
 
+* Allow to choose the Animation Type
+
 ## Installation
 
 First, add `flexible_dropdown` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
 
 ```yaml
 dependencies
-  flexible_dropdown: ^1.0.1
+  flexible_dropdown: ^1.0.2
 ```
 
 ## Usage
@@ -38,6 +40,9 @@ FlexibleDropdown(
   barrierShape: BarrierShape.headerTrans,
   textDirection: TextDirection.ltr,
   offset: Offset.zero,
+  duration: const Duration(milliseconds: 400),
+  animationType: AnimationType.size,
+  animationAlignment: Alignment.topCenter,
   child: Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(6),
@@ -54,4 +59,13 @@ FlexibleDropdown(
 )
 ```
 
-![example](assets/example.gif)
+## Animation Type
+|scale|scaleX|scaleY|
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|![](assets/scale.gif)|![](assets/scaleX.gif)|![](assets/scaleY.gif)|
+|size|slide|fade|
+|![](assets/size.gif)|![](assets/slide.gif)|![](assets/fade.gif)|
+|rotate|||
+|![](assets/rotate.gif)|||
+
+> Note: `AnimationType.size` is only suitable for width of `overlayChild` is full screen width.
