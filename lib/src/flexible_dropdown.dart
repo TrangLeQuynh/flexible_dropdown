@@ -155,10 +155,12 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   });
 
   @override
-  Duration get transitionDuration => duration ?? const Duration(milliseconds: 350);
+  Duration get transitionDuration =>
+      duration ?? const Duration(milliseconds: 350);
 
   @override
-  Duration get reverseTransitionDuration => duration ?? const Duration(milliseconds: 350);
+  Duration get reverseTransitionDuration =>
+      duration ?? const Duration(milliseconds: 350);
 
   @override
   Color? get barrierColor => null;
@@ -199,9 +201,12 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
             ),
             child: AnimatedBuilder(
               animation: animation,
-              child: child,
+              child: Material(
+                color: Colors.transparent,
+                child: child,
+              ),
               builder: (context, child) {
-                switch(animationType) {
+                switch (animationType) {
                   case AnimationType.scale:
                     return ScaleTransition(
                       scale: animation,

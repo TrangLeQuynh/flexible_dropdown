@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Ensure `overlayChild` is a Material widget
+
 ## 1.0.2
 
 * Add property to select animation type for Flexible Dropdown
