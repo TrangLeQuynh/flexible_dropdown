@@ -67,6 +67,9 @@ class _MyAppState extends State<MyApp> {
       barrierColor: Colors.black38.withOpacity(.2),
       barrierShape: BarrierShape.headerTrans,
       textDirection: TextDirection.ltr,
+      duration: const Duration(milliseconds: 400),
+      animationType: AnimationType.scaleY,
+      animationAlignment: Alignment.topCenter,
       offset: Offset.zero,
       child: _buildTextBtn('Flexible Dropdown'),
     );

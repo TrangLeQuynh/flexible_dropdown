@@ -19,6 +19,16 @@ class FlexibleDropdown extends StatefulWidget {
   /// If this property is null, default is [TextDirection.rtl]
   final TextDirection textDirection;
 
+  /// Animation type of flexible dropdown
+  ///
+  final AnimationType? animationType;
+
+  /// The alignment of the origin of the coordinate system
+  ///
+  /// For example, to set the origin of the scale to bottom middle, you can use
+  /// an alignment of (0.0, 1.0).
+  final Alignment? animationAlignment;
+
   /// The color to use for the modal barrier.
   ///
   /// If this property is null, the barrier will be Colors.black38 with opacity 0.2.
@@ -36,6 +46,11 @@ class FlexibleDropdown extends StatefulWidget {
   ///
   final Offset offset;
 
+  /// The duration the transition going forwards and reverse.
+  ///
+  /// When not set, the duration defaults to 350ms.
+  final Duration? duration;
+
   /// Called when the popup menu is shown.
   final VoidCallback? onOpened;
 
@@ -48,6 +63,9 @@ class FlexibleDropdown extends StatefulWidget {
     required this.overlayChild,
     this.textDirection = TextDirection.rtl,
     this.offset = Offset.zero,
+    this.animationType,
+    this.animationAlignment,
+    this.duration,
     this.barrierColor,
     this.barrierShape,
     this.onOpened,
@@ -103,6 +121,9 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
         textDirection: widget.textDirection,
         barrierShape: widget.barrierShape,
         barrierBgColor: widget.barrierColor,
+        duration: widget.duration,
+        animationType: widget.animationType ?? AnimationType.scale,
+        animationAlignment: widget.animationAlignment ?? Alignment.topCenter,
       ),
     )
         .then((value) {
@@ -118,17 +139,26 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   final TextDirection textDirection;
   final Color? barrierBgColor;
   final BarrierShape? barrierShape;
+  final Duration? duration;
+  final AnimationType animationType;
+  final Alignment animationAlignment;
 
   FlexibleDropdownRoute({
     required this.child,
     required this.position,
     this.barrierBgColor,
     this.barrierShape,
+    this.duration,
     this.textDirection = TextDirection.rtl,
+    required this.animationType,
+    required this.animationAlignment,
   });
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 350);
+  Duration get transitionDuration => duration ?? const Duration(milliseconds: 350);
+
+  @override
+  Duration get reverseTransitionDuration => duration ?? const Duration(milliseconds: 350);
 
   @override
   Color? get barrierColor => null;
@@ -171,11 +201,54 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
               animation: animation,
               child: child,
               builder: (context, child) {
-                return Transform.scale(
-                  alignment: Alignment.topCenter,
-                  scaleY: animation.value,
-                  child: child,
-                );
+                switch(animationType) {
+                  case AnimationType.scale:
+                    return ScaleTransition(
+                      scale: animation,
+                      alignment: animationAlignment,
+                      child: child,
+                    );
+                  case AnimationType.scaleY:
+                    return Transform.scale(
+                      alignment: animationAlignment,
+                      scaleY: animation.value,
+                      child: child,
+                    );
+                  case AnimationType.scaleX:
+                    return Transform.scale(
+                      alignment: animationAlignment,
+                      scaleX: animation.value,
+                      child: child,
+                    );
+                  case AnimationType.size:
+                    return SizeTransition(
+                      sizeFactor: animation,
+                      axisAlignment: 0.0,
+                      axis: Axis.vertical,
+                      child: child,
+                    );
+                  case AnimationType.slide:
+                    return SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, -1.0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  case AnimationType.rotate:
+                    return RotationTransition(
+                      turns: animation,
+                      alignment: animationAlignment,
+                      child: child,
+                    );
+                  case AnimationType.fade:
+                    return FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    );
+                  default:
+                    return child ?? const SizedBox();
+                }
               },
             ),
           );
