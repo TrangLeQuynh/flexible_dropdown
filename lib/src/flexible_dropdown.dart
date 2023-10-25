@@ -77,22 +77,33 @@ class FlexibleDropdown extends StatefulWidget {
 }
 
 class _FlexibleDropdownState extends State<FlexibleDropdown> {
+  final FocusNode _flexibleFocusMode = FocusNode();
+
   @override
   void setState(VoidCallback fn) {
     if (mounted) super.setState(fn);
   }
 
   @override
+  void dispose() {
+    _flexibleFocusMode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: _showOverlayDialog,
-      // canRequestFocus: _canRequestFocus,
+      canRequestFocus: true,
+      focusNode: _flexibleFocusMode,
       child: widget.child,
     );
   }
 
   /// show the overlay dialog of the button
   void _showOverlayDialog() {
+    _flexibleFocusMode.requestFocus();
+
     // final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     final RenderBox button = context.findRenderObject()! as RenderBox;
     final RenderBox overlay =
@@ -128,6 +139,7 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
     )
         .then((value) {
       if (!mounted) return;
+      _flexibleFocusMode.unfocus();
       widget.onClosed?.call();
     });
   }
