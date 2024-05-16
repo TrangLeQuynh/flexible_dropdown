@@ -1,11 +1,11 @@
 name: flexible_dropdown
 summary: Customize flexible dropdown
 description: Allows the dropdown to be dismissed by tapping | panning the scrim and Set transparent for header(Barrier)
-version: 1.0.4
+version: 1.0.5
 homepage: https://github.com/TrangLeQuynh/flexible_dropdown
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: '^3.0.5'
   flutter: ">=3.3.0"
 
 dependencies:

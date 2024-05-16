@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Add `borderRadius`, `hoverDuration`
+
 ## 1.0.4
 
 * Do call `requestFocus` on a node to request that it receives the primary focus
