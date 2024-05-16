@@ -57,6 +57,17 @@ class FlexibleDropdown extends StatefulWidget {
   /// Called when the popup menu is closed.
   final VoidCallback? onClosed;
 
+  /// The border radius of the containing rectangle. This is effective only if
+  /// [highlightShape] is [BoxShape.rectangle].
+  ///
+  /// If this is null, it is interpreted as [BorderRadius.zero].
+  final BorderRadius? borderRadius;
+
+  /// The duration of the animation that animates the hover effect.
+  ///
+  /// The default is 50ms.
+  final Duration? hoverDuration;
+
   const FlexibleDropdown({
     Key? key,
     required this.child,
@@ -70,6 +81,8 @@ class FlexibleDropdown extends StatefulWidget {
     this.barrierShape,
     this.onOpened,
     this.onClosed,
+    this.borderRadius,
+    this.hoverDuration,
   }) : super(key: key);
 
   @override
@@ -92,10 +105,13 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return InkResponse(
       onTap: _showOverlayDialog,
       canRequestFocus: true,
       focusNode: _flexibleFocusMode,
+      highlightShape: BoxShape.rectangle,
+      borderRadius: widget.borderRadius,
+      hoverDuration: widget.hoverDuration,
       child: widget.child,
     );
   }

@@ -23,8 +23,8 @@
 First, add `flexible_dropdown` as a [dependency in your pubspec.yaml file](https://flutter.dev/using-packages/).
 
 ```yaml
-dependencies
-  flexible_dropdown: ^1.0.4
+dependencies:
+  flexible_dropdown: ^1.0.5
 ```
 
 ## Usage
