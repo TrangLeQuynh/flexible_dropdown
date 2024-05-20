@@ -59,6 +59,12 @@ FlexibleDropdown(
 )
 ```
 
+Usage to close the flexible dropdown:
+
+```dart
+Navigator.pop(context);
+```
+
 ## Animation Type
 |scale|scaleX|scaleY|
 |:-------------------------:|:-------------------------:|:-------------------------:|
