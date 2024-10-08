@@ -68,6 +68,10 @@ class FlexibleDropdown extends StatefulWidget {
   /// The default is 50ms.
   final Duration? hoverDuration;
 
+  /// slice position
+  final Offset? beginPosition;
+  final Offset? endPosition;
+
   const FlexibleDropdown({
     Key? key,
     required this.child,
@@ -83,6 +87,8 @@ class FlexibleDropdown extends StatefulWidget {
     this.onClosed,
     this.borderRadius,
     this.hoverDuration,
+    this.beginPosition,
+    this.endPosition,
   }) : super(key: key);
 
   @override
@@ -151,6 +157,8 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
         duration: widget.duration,
         animationType: widget.animationType ?? AnimationType.scale,
         animationAlignment: widget.animationAlignment ?? Alignment.topCenter,
+        beginPosition: widget.beginPosition,
+        endPosition: widget.endPosition,
       ),
     )
         .then((value) {
@@ -170,6 +178,8 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
   final Duration? duration;
   final AnimationType animationType;
   final Alignment animationAlignment;
+  final Offset? beginPosition;
+  final Offset? endPosition;
 
   FlexibleDropdownRoute({
     required this.child,
@@ -180,6 +190,8 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
     this.textDirection = TextDirection.rtl,
     required this.animationType,
     required this.animationAlignment,
+    this.beginPosition,
+    this.endPosition,
   });
 
   @override
@@ -263,8 +275,8 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
                   case AnimationType.slide:
                     return SlideTransition(
                       position: Tween<Offset>(
-                        begin: const Offset(0, -1.0),
-                        end: Offset.zero,
+                        begin: beginPosition ?? const Offset(0, -1.0),
+                        end: endPosition ?? Offset.zero,
                       ).animate(animation),
                       child: child,
                     );
