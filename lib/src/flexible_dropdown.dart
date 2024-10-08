@@ -291,6 +291,8 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
                       opacity: animation,
                       child: child,
                     );
+                  case AnimationType.none:
+                    return child ?? const SizedBox();
                   default:
                     return child ?? const SizedBox();
                 }

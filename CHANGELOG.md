@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Add `beginPosition`, `endPosition`
+
 ## 1.0.5
 
 * Add `borderRadius`, `hoverDuration`

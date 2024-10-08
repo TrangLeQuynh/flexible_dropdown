@@ -14,4 +14,5 @@ enum AnimationType {
   fade,
   slide,
   rotate,
+  none,
 }
