@@ -14,6 +14,9 @@ class FlexibleDropdown extends StatefulWidget {
   /// [overlayChild] is the widget which displayed after the user taps on [child]
   final Widget overlayChild;
 
+  /// [rootNavigator] using in Navigator. Is Root???
+  final bool rootNavigator;
+
   /// Whether to prefer going to the left or to the right.
   ///
   /// If this property is null, default is [TextDirection.rtl]
@@ -68,6 +71,18 @@ class FlexibleDropdown extends StatefulWidget {
   /// The default is 50ms.
   final Duration? hoverDuration;
 
+  /// The splash color of the ink response. If this property is null then the
+  /// splash color of the theme, [ThemeData.splashColor], will be used.
+  ///
+  /// See also:
+  ///
+  ///  * [splashFactory], which defines the appearance of the splash.
+  ///  * [radius], the (maximum) size of the ink splash.
+  ///  * [highlightColor], the color of the highlight.
+  final Color? splashColor;
+
+  final Color? highlightColor;
+
   /// slice position
   final Offset? beginPosition;
   final Offset? endPosition;
@@ -76,6 +91,7 @@ class FlexibleDropdown extends StatefulWidget {
     Key? key,
     required this.child,
     required this.overlayChild,
+    this.rootNavigator = true,
     this.textDirection = TextDirection.rtl,
     this.offset = Offset.zero,
     this.animationType,
@@ -87,6 +103,8 @@ class FlexibleDropdown extends StatefulWidget {
     this.onClosed,
     this.borderRadius,
     this.hoverDuration,
+    this.splashColor,
+    this.highlightColor,
     this.beginPosition,
     this.endPosition,
   }) : super(key: key);
@@ -111,13 +129,14 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return InkResponse(
+    return InkWell(
       onTap: _showOverlayDialog,
       canRequestFocus: true,
       focusNode: _flexibleFocusMode,
-      highlightShape: BoxShape.rectangle,
       borderRadius: widget.borderRadius,
       hoverDuration: widget.hoverDuration,
+      splashColor: widget.splashColor,
+      highlightColor: widget.highlightColor,
       child: widget.child,
     );
   }
@@ -136,18 +155,15 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(offset, ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset.zero) + offset,
-            ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(Offset.zero) + offset, ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
     widget.onOpened?.call();
 
     /// Show flexible dropdown
-    final NavigatorState navigator =
-        Navigator.of(context, rootNavigator: false);
-    navigator
-        .push(
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: widget.rootNavigator);
+    navigator.push(
       FlexibleDropdownRoute(
         child: widget.overlayChild,
         position: position,
@@ -160,8 +176,7 @@ class _FlexibleDropdownState extends State<FlexibleDropdown> {
         beginPosition: widget.beginPosition,
         endPosition: widget.endPosition,
       ),
-    )
-        .then((value) {
+    ).then((value) {
       if (!mounted) return;
       _flexibleFocusMode.unfocus();
       widget.onClosed?.call();
@@ -215,18 +230,17 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildModalBarrier() => ModalBarrierLayout(
-        position: position,
-        barrierColor: barrierBgColor,
-        barrierShape: barrierShape,
-      );
+    position: position,
+    barrierColor: barrierBgColor,
+    barrierShape: barrierShape,
+  );
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return MediaQuery.removePadding(
       context: context,
-      removeTop: false,
-      removeBottom: false,
+      removeTop: true,
+      removeBottom: true,
       removeLeft: true,
       removeRight: true,
       child: Builder(
@@ -243,7 +257,12 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
               animation: animation,
               child: Material(
                 color: Colors.transparent,
-                child: child,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: (mediaQuery.size.height - position.top).abs(),
+                  ),
+                  child: child,
+                ),
               ),
               builder: (context, child) {
                 switch (animationType) {
@@ -292,8 +311,6 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
                       child: child,
                     );
                   case AnimationType.none:
-                    return child ?? const SizedBox();
-                  default:
                     return child ?? const SizedBox();
                 }
               },

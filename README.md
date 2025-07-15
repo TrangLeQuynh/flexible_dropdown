@@ -24,7 +24,7 @@ First, add `flexible_dropdown` as a [dependency in your pubspec.yaml file](https
 
 ```yaml
 dependencies:
-  flexible_dropdown: ^1.0.6
+  flexible_dropdown: ^1.0.7
 ```
 
 ## Usage

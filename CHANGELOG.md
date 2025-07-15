@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Ensure maxHeight for overlay child. Add `rootNavigator`, `splashColor`, `highlightColor`
+
 ## 1.0.6
 
 * Add `beginPosition`, `endPosition`
