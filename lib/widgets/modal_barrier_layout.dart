@@ -3,24 +3,59 @@ import '../models/enum_type.dart';
 
 /// [ModalBarrierLayout] use to customize [ModalBarrier]
 ///
-class ModalBarrierLayout extends StatelessWidget {
+class ModalBarrierAnimated extends AnimatedWidget {
   /// Available when [barrierShape] is [BarrierShape.headerTrans]
   ///
   /// Support not set [barrierColor] at header
   final RelativeRect position;
 
   /// The color to use for the modal barrier.
+  /// If non-null, fill the barrier with this color.
+  ///
+  /// See also:
+  ///
+  ///  * [ModalRoute.barrierColor], which controls this property for the
+  ///    [AnimatedModalBarrier] built by [ModalRoute] pages.
+  Animation<Color?> get color => listenable as Animation<Color?>;
+
+  /// [BarrierShape.normal] or [BarrierShape.headerTrans]
+  final BarrierShape? barrierShape;
+
+  const ModalBarrierAnimated({
+    Key? key,
+    required this.position,
+    required Animation<Color?> color,
+    this.barrierShape,
+  }) : super(key: key, listenable: color);
+
+  @override
+  Widget build(BuildContext context) {
+    return ModalBarrierLayout(
+      position: position,
+      barrierColor: color.value,
+      barrierShape: barrierShape,
+    );
+  }
+}
+
+class ModalBarrierLayout extends StatelessWidget {
+  /// Available when [barrierShape] is [BarrierShape.headerTrans]
+  ///
+  /// Support not set [barrierColor] at header
+  final RelativeRect position;
+
+   /// The color to use for the modal barrier.
   final Color? barrierColor;
 
   /// [BarrierShape.normal] or [BarrierShape.headerTrans]
   final BarrierShape? barrierShape;
 
   const ModalBarrierLayout({
-    Key? key,
+    super.key,
     required this.position,
-    this.barrierColor,
+    required this.barrierColor,
     this.barrierShape,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +67,12 @@ class ModalBarrierLayout extends StatelessWidget {
       onPanStart: (detail) {
         Navigator.of(context).pop();
       },
-      child: _buildLayoutShape(),
+      child: _buildBarrierShape(),
     );
   }
 
-  Widget _buildLayoutShape() {
-    final Color bgColor = barrierColor ?? Colors.black38.withOpacity(.2);
+  Widget _buildBarrierShape() {
+    final Color bgColor = barrierColor ?? Colors.transparent;
     switch (barrierShape) {
       case BarrierShape.headerTrans:
         return CustomPaint(
@@ -72,6 +107,6 @@ class HeaderTransPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HeaderTransPainter oldDelegate) {
-    return topPosition != oldDelegate.topPosition;
+    return true;
   }
 }

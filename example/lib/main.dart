@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         width: double.infinity,
         color: Colors.deepPurple,
       ),
-      barrierColor: Colors.black38.withOpacity(.2),
+      barrierColor: Colors.black38.withAlpha(30),
       barrierShape: BarrierShape.headerTrans,
       textDirection: TextDirection.ltr,
       duration: const Duration(milliseconds: 400),

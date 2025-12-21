@@ -211,11 +211,11 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
 
   @override
   Duration get transitionDuration =>
-      duration ?? const Duration(milliseconds: 350);
+      duration ?? const Duration(milliseconds: 300);
 
   @override
   Duration get reverseTransitionDuration =>
-      duration ?? const Duration(milliseconds: 350);
+      duration ?? const Duration(milliseconds: 300);
 
   @override
   Color? get barrierColor => null;
@@ -227,13 +227,28 @@ class FlexibleDropdownRoute<T> extends PopupRoute<T> {
 
   @override
   String? get barrierLabel => 'Flexible Dropdown';
-
+  
   @override
-  Widget buildModalBarrier() => ModalBarrierLayout(
-    position: position,
-    barrierColor: barrierBgColor,
-    barrierShape: barrierShape,
-  );
+  Widget buildModalBarrier() {
+    if (barrierBgColor == null || barrierBgColor!.a == 0) {
+      return ModalBarrierLayout(
+        position: position, 
+        barrierColor: barrierColor,
+        barrierShape: barrierShape,
+      );
+    }
+    final Animation<Color?> color = animation!.drive(
+      ColorTween(
+        begin: barrierBgColor!.withAlpha(0),
+        end: barrierBgColor, // changedInternalState is called if barrierColor updates
+      ).chain(CurveTween(curve: barrierCurve)), // changedInternalState is called if barrierCurve updates
+    );
+    return ModalBarrierAnimated(
+      position: position,
+      color: color,
+      barrierShape: barrierShape,
+    );
+  }
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
